@@ -4,7 +4,7 @@ import pickle
 import numpy as np
 
 app = Flask(__name__)
-model = pickle.load(open('model.pkl', 'rb'))
+model = pickle.load(open('iris_model.pkl', 'rb'))
 
 @app.route('/')
 def home():
@@ -12,13 +12,15 @@ def home():
 
 @app.route('/predict', methods = ['POST'])
 def predict():
-    try:
-        features = [float(x) for x in request.form.values()]
-        final_features = [np.array(features)]
-        prediction = model.predict(final_features)
-        return render_template('index.html', prediction_text = f'Iris Species:{prediction[0]}')
-    except Exception as e:
-        return jsonify({'error':str(e)})
-    
+    features = [float(x) for x in request.form.values()]
+    prediction = model.predict([features])
+    return render_template('index.html', prediction_text = f'Species predicted:{prediction[0]}')
+
+@app.route('/api', methods = ['POST'])
+def api():
+    data = request.get_json(force = True)
+    prediction = model.predict([np.array(list(data.values()))])
+    return jsonify({'prediction' : int(prediction[0])})
+
 if __name__ == '__main__':
-    app.run(debug = True)    
+    app.run(debug = True)
