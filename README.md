@@ -36,10 +36,13 @@ This project demonstrates the end-to-end deployment of a machine learning model 
   "feature4": 0.2
 }
 
-Response
+```markdown
+```json
 {
   "prediction": 0
 }
+```
+
 
 ✅ Features
 Web app for user input and prediction
